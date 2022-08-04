@@ -26,20 +26,27 @@ public class DataGenerator {
     }
 
     private static void sendRequest(RegistrationDto user) {
-        // TODO: отправить запрос на указанный в требованиях path, передав в body запроса объект user
-        //  и не забудьте передать подготовленную спецификацию requestSpec.
-        //  Пример реализации метода показан в условии к задаче.
+        given() // "дано"
+                .spec(requestSpec) // указываем, какую спецификацию используем
+                .body(new RegistrationDto(
+                        user.login,  // логин
+                        user.password, // пароль
+                        user.status)) // статус
+                .when() // "когда"
+                .post("/api/system/users") // на какой путь, относительно BaseUri отправляем запрос
+                .then() // "тогда ожидаем"
+                .statusCode(200); // код 200 OK
     }
 
+
     public static String getRandomLogin() {
-        // TODO: добавить логику для объявления переменной login и задания её значения, для генерации
-        //  случайного логина используйте faker
+        String login = faker.name().firstName();
         return login;
     }
 
+
     public static String getRandomPassword() {
-        // TODO: добавить логику для объявления переменной password и задания её значения, для генерации
-        //  случайного пароля используйте faker
+        String password = faker.internet().password();
         return password;
     }
 
@@ -47,15 +54,16 @@ public class DataGenerator {
         private Registration() {
         }
 
+
         public static RegistrationDto getUser(String status) {
-            // TODO: создать пользователя user используя методы getRandomLogin(), getRandomPassword() и параметр status
-            return user;
+            return new RegistrationDto(getRandomLogin(), getRandomPassword(), status);
         }
 
+
         public static RegistrationDto getRegisteredUser(String status) {
-            // TODO: объявить переменную registeredUser и присвоить ей значение возвращённое getUser(status).
-            // Послать запрос на регистрацию пользователя с помощью вызова sendRequest(registeredUser)
-            return registeredUser;
+            RegistrationDto getRegisteredUser = getUser(status);
+            sendRequest(getRegisteredUser);
+            return getRegisteredUser;
         }
     }
 
