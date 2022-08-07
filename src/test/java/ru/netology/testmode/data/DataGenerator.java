@@ -28,10 +28,7 @@ public class DataGenerator {
     private static void sendRequest(RegistrationDto user) {
         given() // "дано"
                 .spec(requestSpec) // указываем, какую спецификацию используем
-                .body(new RegistrationDto(
-                        user.login,  // логин
-                        user.password, // пароль
-                        user.status)) // статус
+                .body(user) // статус
                 .when() // "когда"
                 .post("/api/system/users") // на какой путь, относительно BaseUri отправляем запрос
                 .then() // "тогда ожидаем"
